@@ -1,0 +1,38 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;//подключаем нужные библиотеки
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        long startTime = System.nanoTime();
+        BufferedReader bf = new BufferedReader(new
+                FileReader("main.txt"));//объявляем переменную класса BufferedReader длячтения файла main.txt
+        int n = Integer.parseInt(bf.readLine());//считываем количество элементов из файла
+        String s = bf.readLine() + " ";//обрабатываем строку элементов и добавляем дополнительный пробел
+        long []arr = new long[n];//создаём массив на n элементов
+        for (int i = 0; i < n; i++) {//заполняем массив
+            arr[i] = Integer.parseInt(s.substring(0,s.indexOf(" ")));//в массив записываем подстроку начиная от начала строки до первого пробела
+            s = s.substring(s.indexOf(" ")+1);//от основной строки отрезаем начало до первого пробела
+        }
+        for (int i = 0; i < n; i++) {
+            long min = 1000000001;//создаём переменную min
+            int index = 0;//и переменную index
+            for (int j = i; j < n; j++) {//находим min элемент в области от i до n
+                if(min>arr[j]) {
+                    min = arr[j];
+                    index = j;//записываем его индекс в переменную index
+                }
+            }
+            long buffer = arr[i];//меняем местами элементы arr[i] и arr[index]
+            arr[i] = min;
+            arr[index] = buffer;
+        }
+        for (int i = 0; i < n; i++) {//выводим массив
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+        System.out.println(System.nanoTime()-startTime);
+        System.out.println(Runtime.getRuntime().totalMemory()-
+                Runtime.getRuntime().freeMemory());
+    }
+}

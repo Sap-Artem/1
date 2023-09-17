@@ -1,0 +1,40 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;//подключаем нужные библиотеки
+import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bf = new BufferedReader(new
+                FileReader("main.txt"));//объявляем переменную класса BufferedReader длячтения файла main.txt
+        long startTime = System.nanoTime();
+        int n = Integer.parseInt(bf.readLine());//считываем количество элементов из файла
+        String s = bf.readLine() + " ";//обрабатываем строку элементов и добавляем дополнительный пробел
+        long []arr = new long[n];//создаём массив на n элементов
+        for (int i = 0; i < n; i++) {//заполняем массив
+            arr[i] = Integer.parseInt(s.substring(0,s.indexOf(" ")));//в массив записываем подстроку начиная от начала строки до первого пробела
+            s = s.substring(s.indexOf(" ")+1);//от основной строки отрезаем начало до первого пробела
+        }
+        int v = Integer.parseInt(bf.readLine());//считываем искомое число из файла
+        ArrayList<Integer> arrayList = new ArrayList<>();//объявляем список индексов найденных элементов
+        int flag = 0;//объявляем переменную flag
+        for (int i = 0; i < n; i++) {//пробегаем по массиву
+            if(arr[i]==v){//если элемент равен искомому числу
+                arrayList.add(i);//записываем их в лист
+                flag = 1;//если искомое число найдено, то flag поднят
+            }
+        }
+        if(flag==0)//если flag опущен
+            System.out.println(-1);//выводим -1
+        else{//если flag поднят
+            System.out.println(arrayList.size());//размер листа = количеству найденных значений
+            for (int i = 0; i < arrayList.size(); i++) {//выводим все значения из списка
+                System.out.print(arrayList.get(i) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println(System.nanoTime()-startTime);
+        System.out.println(Runtime.getRuntime().totalMemory()-
+                Runtime.getRuntime().freeMemory());
+    }
+}

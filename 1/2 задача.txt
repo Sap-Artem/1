@@ -1,0 +1,44 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;//подключаем нужные библиотеки
+public class Main {
+    public static void main(String[] args) throws IOException {
+        long startTime = System.nanoTime();
+        BufferedReader bf = new BufferedReader(new
+                FileReader("main.txt"));//объявляем переменную класса BufferedReader длячтения файла main.txt
+        int n = Integer.parseInt(bf.readLine());//считываем количество элементов из файла
+        String s = bf.readLine() + " ";//обрабатываем строку элементов и добавляем дополнительный пробел
+        long []arr = new long[n];//создаём массив на n элементов
+        for (int i = 0; i < n; i++) {//заполняем массив
+            arr[i] = Integer.parseInt(s.substring(0,s.indexOf(" ")));//в массив записываем подстроку начиная от начала строки до первого пробела
+            s = s.substring(s.indexOf(" ")+1);//от основной строки отрезаем начало до первого пробела
+        }
+        int []index = new int[n];//создаём массив индексов
+        index[0] = 1;//очевидно, первый индекс равен 1
+        for (int i = 1; i < n; i++) {//последовательно рассматриваем каждый элемент начиная со второго
+            for (int j = i-1; j >= 0; j--) {//последовательно рассматриваем каждый элемент вплоть до i, начиная с i-1
+                if(arr[j+1]<arr[j]){//если 2 элемента не находятся в порядке возрастания
+                    long buffer = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = buffer;//меняем значение arr[j] и arr[j+1] через буффер
+                    if(j==0)//если j дошло до 0, значит сортировка дошла до начала массива
+                        index[i] = 1;//поэтому индекс будет равен 1
+                }else {
+                    index[i] = j+2;//j - позиция ближайшего к началу элемента пары, поэтому в массив индексов запишем j+2, а не j+1
+                    break;//в противном случае прерываем цикл (элементы левее рассортированы)
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {//выводим элементы массива индексов
+            System.out.print(index[i] + " ");
+        }
+        System.out.println();
+        for (int i = 0; i < n; i++) {//выводим элементы отсортированного массива
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+        System.out.println(System.nanoTime()-startTime);
+        System.out.println(Runtime.getRuntime().totalMemory()-
+                Runtime.getRuntime().freeMemory());
+    }
+}
